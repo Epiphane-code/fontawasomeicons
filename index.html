@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toutes les icônes Font Awesome</title>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#0f172a;
+            color:white;
+            font-family:Arial;
+            padding:20px;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        input{
+            width:100%;
+            max-width:500px;
+            display:block;
+            margin:0 auto 30px;
+            padding:15px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+        }
+
+        .icons{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+            gap:15px;
+        }
+
+        .card{
+            background:#1e293b;
+            padding:20px 10px;
+            border-radius:12px;
+            text-align:center;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .card:hover{
+            background:#334155;
+            transform:translateY(-5px);
+        }
+
+        .card i{
+            font-size:35px;
+            margin-bottom:10px;
+            color:#38bdf8;
+        }
+
+        .name{
+            font-size:13px;
+            word-break:break-word;
+        }
+
+        .toast{
+            position:fixed;
+            top:20px;
+            right:20px;
+            background:#22c55e;
+            padding:12px 20px;
+            border-radius:10px;
+            display:none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Font Awesome Icons</h1>
+
+    <input type="text" id="search" placeholder="Rechercher une icône...">
+
+    <div class="icons" id="icons"></div>
+
+    <div class="toast" id="toast">
+        Code copié !
+    </div>
+
+    <script type="module">
+
+        import { fas } from "https://cdn.jsdelivr.net/npm/@fortawesome/free-solid-svg-icons/+esm";
+        import { fab } from "https://cdn.jsdelivr.net/npm/@fortawesome/free-brands-svg-icons/+esm";
+        import { far } from "https://cdn.jsdelivr.net/npm/@fortawesome/free-regular-svg-icons/+esm";
+
+        const iconsContainer = document.getElementById("icons");
+
+        const allIcons = [];
+
+        // SOLID
+        Object.keys(fas).forEach(key => {
+            if(key.startsWith("fa")){
+
+                const name = key
+                    .replace(/^fa/, "")
+                    .replace(/([A-Z])/g, "-$1")
+                    .toLowerCase()
+                    .replace(/^-/, "");
+
+                allIcons.push({
+                    name,
+                    prefix:"fa-solid"
+                });
+            }
+        });
+
+        // BRANDS
+        Object.keys(fab).forEach(key => {
+            if(key.startsWith("fa")){
+
+                const name = key
+                    .replace(/^fa/, "")
+                    .replace(/([A-Z])/g, "-$1")
+                    .toLowerCase()
+                    .replace(/^-/, "");
+
+                allIcons.push({
+                    name,
+                    prefix:"fa-brands"
+                });
+            }
+        });
+
+        // REGULAR
+        Object.keys(far).forEach(key => {
+            if(key.startsWith("fa")){
+
+                const name = key
+                    .replace(/^fa/, "")
+                    .replace(/([A-Z])/g, "-$1")
+                    .toLowerCase()
+                    .replace(/^-/, "");
+
+                allIcons.push({
+                    name,
+                    prefix:"fa-regular"
+                });
+            }
+        });
+
+        function renderIcons(search = ""){
+
+            iconsContainer.innerHTML = "";
+
+            allIcons
+            .filter(icon =>
+                icon.name.includes(search.toLowerCase())
+            )
+            .forEach(icon => {
+
+                const card = document.createElement("div");
+
+                card.className = "card";
+
+                card.innerHTML = `
+                    <i class="${icon.prefix} fa-${icon.name}"></i>
+                    <div class="name">${icon.name}</div>
+                `;
+
+                card.onclick = () => {
+
+                    const code =
+`<i class="${icon.prefix} fa-${icon.name}"></i>`;
+
+                    navigator.clipboard.writeText(code);
+
+                    const toast =
+                    document.getElementById("toast");
+
+                    toast.style.display = "block";
+
+                    setTimeout(() => {
+                        toast.style.display = "none";
+                    },1500);
+                };
+
+                iconsContainer.appendChild(card);
+
+            });
+
+        }
+
+        renderIcons();
+
+        document.getElementById("search")
+        .addEventListener("input",(e)=>{
+            renderIcons(e.target.value);
+        });
+
+    </script>
+
+</body>
+
+</html>
